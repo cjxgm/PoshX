@@ -26,5 +26,6 @@ typedef struct tagPOX{
 #define POX_INIT calloc(1, sizeof(POX))
 void pox_load(char* filename, POX* pox);
 void pox_run(POX* pox);
+void pox_run_once(POX* pox);
 
 #endif

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "pox.h"
+#include "opcodes.h"
 
 void pox_load(char* filename, POX* pox){
 	int i;
@@ -32,25 +33,60 @@ void pox_load(char* filename, POX* pox){
 		char sec_name[21] = {0};
 		for (i=0; i<20; i++) 
 			if ((sec_name[i] = fgetc(fp)) == 0) break;
+		if (sec_name[0] == EOF) break;
 		uint32 sec_len;
 		fread(&sec_len, sizeof(uint32), 1, fp);
 
 		if (strcmp(sec_name, ".code") == 0){
+			/*********** .code section format **********
+			 * ".code" uint32    uint16       (byte   uint16*amount)*amount
+			 * `------v-----'    `-v--'        `-v-'  `----v-----'
+			 *  section hdr    code amount     code   data address
+			 */
 			fread(&pox->lencs, sizeof(uint16), 1, fp);
 			pox->cs = calloc(sizeof(POX_CODE), pox->lencs);
-			fread(pox->cs, sizeof(POX_CODE), pox->lencs, fp);
+			/** fread(pox->cs, sizeof(POX_CODE), pox->lencs, fp);
+			 * It doesn't work! Fuck! How to pack memory??
+			 */
+			for(i=0; i<pox->lencs; i++){
+				fread(&pox->cs[i].code, sizeof(byte), 1, fp);
+				fread(&pox->cs[i].data, sizeof(uint16), 1, fp);
+			}
 			#ifdef __DEBUG__
 			char msg[20];
-			sprintf(msg, "%d", pox->lencs);
+			sprintf(msg, "[CODE: %d]", pox->lencs);
 			THROW(false, msg);
 			for (i=0; i<pox->lencs; i++){
-				sprintf(msg, "0x%2.2X\t%4.4X", pox->cs[i].code, pox->cs[i].data);
+				sprintf(msg, "%4.4Xh  %2.2Xh  %4.4Xh", i, pox->cs[i].code, pox->cs[i].data);
 				THROW(false, msg);
 			}
 			#endif
 		}
 		else if (strcmp(sec_name, ".data") == 0){
-			fseek(fp, sec_len, SEEK_CUR);
+			/*********** .data section format **********
+			 * ".data" uint32     uint16          uint16       int32*amount
+			 * `------v-----'     `-v--'          `-v--'       `----v-----'
+			 *  section hdr   variable amount   value amount    value data
+			 */
+			uint16 vc; // How many variables?
+			fread(&vc, sizeof(uint16), 1, fp);
+			fread(&pox->lends, sizeof(uint16), 1, fp);
+			vc += 0x10; // 0x10 for registers
+			pox->lends += vc;
+			pox->ds = calloc(sizeof(POX_CODE), pox->lends);
+			for (i=vc; i<pox->lends; i++)
+				fread(&pox->ds[i], sizeof(int32), 1, fp);
+			printf("%d", pox->lends -vc-0x10);
+			#ifdef __DEBUG__
+			char msg[20];
+			sprintf(msg, "[DATA: %d]", pox->lends);
+			THROW(false, msg);
+			for (i=0; i<pox->lends; i++){
+				sprintf(msg, "%4.4Xh  %8.8Xh", i, pox->ds[i]);
+				THROW(false, msg);
+			}
+			#endif
+
 		}
 		else {
 			fseek(fp, sec_len, SEEK_CUR);
@@ -66,5 +102,79 @@ void pox_load(char* filename, POX* pox){
 }
 
 void pox_run(POX* pox){
-	printf("[POX_RUN] Done.\n");
+	#ifdef __DEBUG__
+	THROW(false, "[POX_RUN] Begin.");
+	#endif
+	while(1){
+		if (pox->ip >= pox->lencs)
+			#ifdef __DEBUG__
+			THROW(true, "Unexpected halted.");
+			#else
+			THROW(ERR_UNEXPECTED_HALTED);
+			#endif
+		pox_run_once(pox);
+		if (error == ERR_HALT) break;
+		if (error) return;
+	}
+	#ifdef __DEBUG__
+	THROW(false, "[POX_RUN] Done.");
+	#endif
+}
+void pox_run_once(POX* pox){
+	#define CODE pox->cs[pox->ip].code
+	#define DATA pox->ds[pox->cs[pox->ip].data]
+	char msg[20];
+	int32 tempi, tempj;
+	switch(CODE){
+		case NOP: break;
+
+		case PUSH:
+			stack_push(&pox->sdata, DATA);
+			break;
+		case POP:
+			stack_pop(&pox->sdata, &DATA);
+			break;
+
+		case ADD:
+		case SUB:
+		case MUL:
+		case DIV:
+		case MOD:
+			stack_pop(&pox->sdata, &tempj);
+			stack_pop(&pox->sdata, &tempi);
+			switch(CODE){
+				case ADD: tempi+=tempj; break;
+				case SUB: tempi-=tempj; break;
+				case MUL: tempi*=tempj; break;
+				case DIV: tempi/=tempj; break;
+				case MOD: tempi%=tempj; break;
+			}
+			stack_push(&pox->sdata, tempi);
+			break;
+
+		case IN:
+			printf("Please input an integer: ");
+			scanf("%d", &tempi);
+			stack_push(&pox->sdata, tempi);
+			break;
+		case OUT:
+			stack_pop(&pox->sdata, &tempi);
+			printf("[OUT] %d\n", tempi);
+			break;
+
+		case HALT:
+			ERROR(ERR_HALT);
+			break;
+
+		default:
+			#ifdef __DEBUG__
+			sprintf(msg, "Unknown code: %2.2Xh", CODE);
+			THROW(true, msg);
+			#else
+			THROW(ERR_UNKNOWN_CODE);
+			#endif
+	}
+	pox->ip++;
+	#undef DATA
+	#undef CODE
 }
