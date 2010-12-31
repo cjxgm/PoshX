@@ -11,4 +11,4 @@ stack.o: stack.c include/stack.h include/types.h
 pox_gen: pox_gen.c
 	gcc -o pox_gen pox_gen.c
 	./pox_gen
-	./pox test.pox
+

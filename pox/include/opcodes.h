@@ -27,7 +27,7 @@
 #define OR		0x34
 #define NOT		0x35
 
-#define INT		0x40
+//#define INT		0x40
 #define IN		0x41
 #define OUT		0x42
 

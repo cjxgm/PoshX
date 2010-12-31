@@ -76,7 +76,6 @@ void pox_load(char* filename, POX* pox){
 			pox->ds = calloc(sizeof(POX_CODE), pox->lends);
 			for (i=vc; i<pox->lends; i++)
 				fread(&pox->ds[i], sizeof(int32), 1, fp);
-			printf("%d", pox->lends -vc-0x10);
 			#ifdef __DEBUG__
 			char msg[20];
 			sprintf(msg, "[DATA: %d]", pox->lends);
@@ -122,7 +121,8 @@ void pox_run(POX* pox){
 }
 void pox_run_once(POX* pox){
 	#define CODE pox->cs[pox->ip].code
-	#define DATA pox->ds[pox->cs[pox->ip].data]
+	#define ADDR pox->cs[pox->ip].data
+	#define DATA pox->ds[ADDR]
 	char msg[20];
 	int32 tempi, tempj;
 	switch(CODE){
@@ -134,7 +134,51 @@ void pox_run_once(POX* pox){
 		case POP:
 			stack_pop(&pox->sdata, &DATA);
 			break;
+		case POPA:
+			while(!error)
+				stack_pop(&pox->sdata, &DATA);
+			ERROR(0);
+			break;
 
+		case JMP:
+			pox->ip = ADDR-1;
+			break;
+		case JZ:
+			stack_pop(&pox->sdata, &tempi);
+			if (!tempi) pox->ip = ADDR-1;
+			break;
+		case CALL:
+			stack_push(&pox->scall, pox->ip);
+			pox->ip = ADDR-1;
+			break;
+		case CZ:
+			stack_pop(&pox->sdata, &tempi);
+			if (!tempi){
+				stack_push(&pox->scall, pox->ip);
+				pox->ip = ADDR-1;
+			}
+			break;
+		case RET:
+			stack_pop(&pox->scall, &tempi);
+			pox->ip = (uint16) tempi;
+			break;
+
+		case INC:
+			if (ADDR) DATA++;
+			else{
+				stack_pop(&pox->sdata, &tempi);
+				tempi++;
+				stack_push(&pox->sdata, tempi);
+			}
+			break;
+		case DEC:
+			if (ADDR) DATA--;
+			else{
+				stack_pop(&pox->sdata, &tempi);
+				tempi--;
+				stack_push(&pox->sdata, tempi);
+			}
+			break;
 		case ADD:
 		case SUB:
 		case MUL:
@@ -152,8 +196,33 @@ void pox_run_once(POX* pox){
 			stack_push(&pox->sdata, tempi);
 			break;
 
+		case GT:
+		case LT:
+		case EQ:
+		case AND:
+		case OR:
+			stack_pop(&pox->sdata, &tempj);
+			stack_pop(&pox->sdata, &tempi);
+			switch(CODE){
+				case GT: tempi = (tempi>tempj); break;
+				case LT: tempi = (tempi<tempj); break;
+				case EQ: tempi = (tempi==tempj); break;
+				case AND: tempi = (tempi&&tempj); break;
+				case OR: tempi = (tempi||tempj); break;
+			}
+			stack_push(&pox->sdata, tempi);
+			break;
+		case NOT:
+			if (ADDR) DATA = !DATA;
+			else{
+				stack_pop(&pox->sdata, &tempi);
+				tempi = !tempi;
+				stack_push(&pox->sdata, tempi);
+			}
+			break;
+
 		case IN:
-			printf("Please input an integer: ");
+			printf(">>>>> ");
 			scanf("%d", &tempi);
 			stack_push(&pox->sdata, tempi);
 			break;
