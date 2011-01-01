@@ -4,6 +4,7 @@
 #include "opcodes.h"
 
 void pox_load(char* filename, POX* pox){
+	ERROR(0); // Clear last error
 	int i;
 
 	FILE* fp = fopen(filename, "rb");
@@ -101,6 +102,7 @@ void pox_load(char* filename, POX* pox){
 }
 
 void pox_run(POX* pox){
+	ERROR(0); // Clear last error
 	#ifdef __DEBUG__
 	THROW(false, "[POX_RUN] Begin.");
 	#endif
@@ -120,6 +122,7 @@ void pox_run(POX* pox){
 	#endif
 }
 void pox_run_once(POX* pox){
+	ERROR(0); // Clear last error
 	#define CODE pox->cs[pox->ip].code
 	#define ADDR pox->cs[pox->ip].data
 	#define DATA pox->ds[ADDR]

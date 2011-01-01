@@ -4,15 +4,16 @@
 static int error = 0;
 
 #define ERROR(e) error = e
+
 #ifdef __DEBUG__
-#include <stdio.h>
-#define THROW(iserr,e){\
-	if (iserr) printf("Error: ");\
-	printf("%s\n", e);\
-	if (iserr) { error=-1; return; };\
-}
+	#include <stdio.h>
+	#define THROW(iserr,e){\
+		if (iserr) printf("Error: ");\
+		printf("%s\n", e);\
+		if (iserr) { error=-1; return; };\
+	}
 #else
-#define THROW(e) { ERROR(e); return; }
+	#define THROW(e) { ERROR(e); return; }
 #endif
 
 #define ERR_FILETYPE_MISMATCH			1
