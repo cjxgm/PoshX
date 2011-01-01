@@ -1,11 +1,125 @@
-========== NEVER WINDOWS-ORIENTED PRINCIPLE ==========
+                     PoshX README File
 
-We Clan Open Studio will never make our source(s) more
-friendly to Windows, and we will never port our
-source(s) to Windows officially.
+___________
+ IMPORTANT 
+~~~~~~~~~~~
+  This project is under GPLv3.
+  !!! NO WARRANTY !!!
+  And we Clan Open Studio will follow the NWO Principle
+(see "NWO.Principle" for more details).
 
-If you really want to port the source(s) to Windows,
-you can do it yourself.
+______________
+ Introduction 
+~~~~~~~~~~~~~~
+  PoshX is an assembly-like programming language compiler and
+virtual machine(VM). It is designed as a stack-machine and, of
+course, not so difficult to learn or use than assembly. The
+language of this is called Posh. PoshX is another way to say
+Posh 10.
+  In X series of Posh, the VM is called pox, and the compiler
+is called poxc. The file postfix of PoshX Sourcecode is ".pxs",
+and the file postfix of PoshX Application is ".pox". You can
+use the compiler and the VM as follows:
+    $ poxc sth.pxs -o sth.pox	# Compile sth.pxs to sth.pox
+	  							# Compiling command just like gcc!
+    $ pox sth.pox				# Run sth.pox
+  OK, then let's learn the Posh language.
+  (If you are developer(s), you may want to see the technology
+  document. See "techdoc".)
 
-Just under GPLv3 and NO WARRANTY!!!
+_____________________
+ Posh - the language 
+~~~~~~~~~~~~~~~~~~~~~
+  OK, let's have a look at it first. Don't worry,  I'll explain
+them later.
+    		call main	# gosub main
+			halt		# end
+	main:				# main:
+			push 1
+			pop i		# i = 1
+		for:			# for:
+			push i
+			push 10
+			lt
+			jz for.end	# if not i<10 then goto for_end
+			push i
+			out			# print i
+			inc i		# i = i + 1
+			jmp for		# goto for
+		for.end:		# for_end:
+	ret					# return
+  The first thing I want to say is, that anything from "#" to
+the line-end is a comment. That means, the compiler will ignore
+anything from "#" to line-end. I put a BASIC program as comments
+to let you know what these instructions will do.
+  You may find that there are a lot of "push", "pop" and something
+like these. Yeah, it's a stack-machine. So the stack operations
+are significant. If you don't know what is a stack, or even don't
+know what is assembly language, oh terrible, you won't understand
+what I just said, what I'm saying now and what I will say. So, if
+you really don't know these things, Google them and learn a little
+bit about these, then go back to see this document.
+  OK, let's see the code in detail:
+    		call main	# gosub main
+			halt		# end
+  These instructions will call the function "main" which will be
+declared below. In fact, "main" is just a label like any other
+assembly language. "halt" let the VM stop normally, or it may occure
+error(s). Each instruction is combined by an op(eration) and one
+or no value. Go on:
+	main:				# main:
+			push 1
+			pop i		# i = 1
+  Yeah, the stack operations. As I mentioned above, it declares a
+label "main". Then it pushes a digit 1 to the stack, then pops it
+to the variable i. There is something I must tell you is, that
+Posh has only 1 data type, that is singned 32-bit integer.
+  These 2 instructions (label declaration is not an instruction!)
+assigns i to 1 to prepare for the for-loop.
+		for:			# for:
+			push i
+			push 10
+			lt
+			jz for.end	# if not i<10 then goto for_end
+  "lt" is the short form of "less than". It will pop 2 values and
+compare them if the last-second pushed value is less than the last
+pushed one. Every op which needs 2 values is used like this. Care
+about the order by which the op will use the value!
+			push i
+			out			# print i
+  Easy ones. "out" will output the value on the stack head.
+			inc i		# i = i + 1
+  In C/C++, this is written like "i++". Yeah, inc = increase, and
+dec = decrease which you may use in the future.
+			jmp for		# goto for
+		for.end:		# for_end:
+  The for-loop is totally ended.
+	ret					# return
+  Just like "return" in any other programming language.
+  OK, not difficult, right? But I don't expect you to use such a
+low-level programming language, so I developed another language
+which uses PoshX as its machine. It's Poasy. The reason why I develop
+poxc is just that I want to test my VM, and get some compiling
+experience about Posh so that I could make Poasy more easily.
+
+____________
+ Developers 
+~~~~~~~~~~~~
+  eXerigumo Clanjor
+
+_________
+ History 
+~~~~~~~~~
+  20110101  X 0 (10.0):		Re-designed of Posh language.
+  							All codes rewrote under Linux.
+							Finished the first README document.
+
+  9.0:	Re-designed of IDE:
+  			Support syntax highlight.
+			Smart syntax auto-complete like EPL.
+		Included some libraries.
+		Written in EPL under M$ Windows.
+
+  ... (Older version needn't be mentioned as they all under
+Windows but the latest ones are/wiil be under Linux.)
 

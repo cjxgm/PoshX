@@ -4,6 +4,7 @@ map ["q] 
 let s:cpo_save=&cpo
 set cpo&vim
 nmap gx <Plug>NetrwBrowseX
+map <F3> zC
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
 map <F12> gg=G
 map <F11> :mks! s.vim
@@ -14,7 +15,6 @@ map <F10> zM
 map <F9> zR
 map <F8> zc
 map <F7> zo
-map <F3> zC
 map <F2> zO
 abbr note // ======= Functions =======
 let &cpo=s:cpo_save
@@ -42,7 +42,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +5 main.c
-badd +0 makefile
+badd +1 makefile
 badd +1 pox.c
 badd +1 include/opcodes.h
 badd +42 pox_gen.c
@@ -174,82 +174,124 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-126
+11
 normal zo
+21
+normal zo
+27
+normal zo
+34
+normal zo
+40
+normal zo
+46
+normal zo
+57
+normal zo
+65
+normal zo
+46
+normal zo
+71
+normal zo
+83
+normal zo
+89
+normal zo
+71
+normal zo
+96
+normal zo
+34
+normal zo
+11
+normal zc
+109
+normal zo
+114
+normal zo
+116
+normal zo
+114
+normal zo
+109
+normal zc
 129
 normal zo
-132
-normal zo
-135
-normal zo
-138
+136
 normal zo
 139
 normal zo
-138
+142
 normal zo
-144
+145
 normal zo
-147
+146
+normal zo
+145
 normal zo
 151
 normal zo
-155
+154
 normal zo
-157
-normal zo
-155
+158
 normal zo
 162
 normal zo
-167
+164
+normal zo
+162
 normal zo
 169
 normal zo
-167
+174
 normal zo
-175
+176
 normal zo
-177
+174
 normal zo
-175
+182
 normal zo
-187
+184
+normal zc
+182
+normal zc
+194
 normal zo
-190
+197
 normal zo
-187
+194
 normal zo
-204
+211
 normal zo
-207
+214
 normal zo
-204
+211
 normal zo
-216
-normal zo
-218
-normal zo
-216
+223
 normal zo
 225
 normal zo
-230
+223
 normal zo
-235
+232
 normal zo
-240
+237
 normal zo
+242
+normal zo
+247
+normal zo
+136
+normal zc
 129
-normal zo
-126
-normal zo
-let s:l = 225 - ((8 * winheight(0) + 8) / 17)
+normal zc
+let s:l = 1 - ((0 * winheight(0) + 8) / 17)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-225
-normal! 015l
+1
+normal! 011l
 wincmd w
 argglobal
 edit pox_gen.c
@@ -353,22 +395,24 @@ normal zo
 normal zo
 30
 normal zo
-37
+38
 normal zo
-46
+41
 normal zo
-56
+50
 normal zo
-65
+60
+normal zo
+69
 normal zo
 6
 normal zo
-let s:l = 28 - ((0 * winheight(0) + 4) / 9)
+let s:l = 6 - ((5 * winheight(0) + 4) / 9)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-28
-normal! 01l
+6
+normal! 021l
 wincmd w
 argglobal
 edit include/opcodes.h
@@ -581,11 +625,11 @@ normal zo
 normal zo
 6
 normal zo
-let s:l = 3 - ((0 * winheight(0) + 3) / 6)
+let s:l = 5 - ((2 * winheight(0) + 3) / 6)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
+5
 normal! 0
 wincmd w
 argglobal

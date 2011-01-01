@@ -1,3 +1,7 @@
+/** Posh X Virtual Machine
+ * by eXerigumo Clanjor
+ * Copyleft (C) Clan Open Studio, 2010-2011.
+ */
 #include <stdio.h>
 #include <string.h>
 #include "pox.h"
@@ -248,5 +252,6 @@ void pox_run_once(POX* pox){
 	}
 	pox->ip++;
 	#undef DATA
+	#undef ADDR
 	#undef CODE
 }
