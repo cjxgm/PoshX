@@ -1,0 +1,6 @@
+#!/bin/bash
+if make; then
+	./poxc test.pxs test.pox
+	#chmod +x test.pox
+	#./test.pox
+fi

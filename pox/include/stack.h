@@ -1,7 +1,7 @@
 #ifndef __STACK_H__
 #define __STACK_H__
 
-#include "types.h"
+#include "type.h"
 
 typedef struct tagSTACK{
 	int32 data;

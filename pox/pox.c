@@ -5,13 +5,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "pox.h"
-#include "opcodes.h"
+#include "opcode.h"
 
 void pox_load(char* filename, POX* pox){
 	ERROR(0); // Clear last error
 	int i;
 
 	FILE* fp = fopen(filename, "rb");
+
+	// Skip the magic line
+	char ch;
+	while((ch=fgetc(fp)) != '\n') if (ch == EOF) break; 
 
 	// Check filetype and version
 	byte hdr[4]; // Pox Header

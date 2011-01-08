@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include "error.h"
-#include "types.h"
+#include "type.h"
 #include "stack.h"
 
 #define POX_VERSION 0x00

@@ -1,9 +1,13 @@
 #include <stdio.h>
-#include "include/pox.h"
-#include "include/opcodes.h"
+#include "pox.h"
+#include "opcode.h"
+#include "const.h"
 
 int main(){
 	FILE* fp = fopen("./test.pox", "wb");
+
+	// Magic line
+	fprintf(fp, MAGIC_LINE);
 
 	// POX Header
 	fwrite("POX", 1, 3, fp);
