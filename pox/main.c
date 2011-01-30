@@ -2,11 +2,12 @@
 #include <assert.h>
 #include "pox.h"
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[])
+{
 	assert(argc==2);
 
 	// Init
-	POX* pox = POX_INIT;
+	pox_t* pox = POX_INIT;
 
 	// Load
 	pox_load(argv[1], pox);

@@ -1,5 +1,5 @@
-#ifndef __OPCODES_H__
-#define __OPCODES_H__
+#ifndef __OPCODE_H__
+#define __OPCODE_H__
 
 #define NOP		0x00
 #define PUSH	0x01

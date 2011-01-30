@@ -1,6 +1,6 @@
 CC		= gcc
 LDFLAGS	= -I../include -I./include
-CFLAGS	= -I../include -I./include# -D__DEBUG__
+CFLAGS	= -I../include -I./include -D__DEBUG__
 
 pox: main.c pox.o stack.o
 

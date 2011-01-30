@@ -3,12 +3,13 @@
 
 #include "type.h"
 
-typedef struct tagSTACK{
-	int32 data;
-	struct tagSTACK* next;
-} STACK;
+typedef struct stack
+{
+	int4 data;
+	struct stack *next;
+} stack_t;
 
-void stack_push(STACK** stack, int32 data);
-void stack_pop(STACK** stack, int32* data);
+void stack_push(stack_t **stack, int4 data);
+void stack_pop(stack_t **stack, int4 *data);
 
 #endif

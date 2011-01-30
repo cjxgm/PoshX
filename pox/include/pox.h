@@ -8,24 +8,26 @@
 
 #define POX_VERSION 0x00
 
-typedef struct tagPOX_CODE{
-	byte code;			// Operating code 
-	uint16 data;		// Data pointer (to POX.ds)
-} POX_CODE;
+typedef struct pox_code
+{
+	byte code;		// Operating code 
+	uint4 data;		// Data pointer (to pox_t.ds)
+} pox_code_t;
 
-typedef struct tagPOX{
-	POX_CODE* cs;		// Code section
-	int32* ds;			// Data section
-	uint16 lencs;		// Length of cs
-	uint16 lends;		// Length of ds
-	uint16 ip;			// Instruction Pointer
-	STACK* sdata;		// Stack for user data;
-	STACK* scall;		// Stack for function calls;
-} POX;
+typedef struct pox
+{
+	pox_code_t *cs;		// Code section
+	int4 *ds;			// Data section
+	uint4 lencs;		// Length of cs
+	uint4 lends;		// Length of ds
+	uint4 ip;			// Instruction Pointer
+	stack_t *data_stack;		// Stack for user data;
+	stack_t *call_stack;		// Stack for function calls;
+} pox_t;
 
-#define POX_INIT calloc(1, sizeof(POX))
-void pox_load(char* filename, POX* pox);
-void pox_run(POX* pox);
-void pox_run_once(POX* pox);
+#define POX_INIT calloc(1, sizeof(pox_t))
+void pox_load(char* filename, pox_t* pox);
+void pox_run(pox_t* pox);
+void pox_run_once(pox_t* pox);
 
 #endif

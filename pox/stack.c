@@ -3,21 +3,23 @@
 #include "stack.h"
 #include "error.h"
 
-void stack_push(STACK** stack, int32 data){
-	STACK* node = malloc(sizeof(STACK));
+void stack_push(stack_t **stack, int4 data)
+{
+	stack_t *node = malloc(sizeof(stack_t));
 	node->next = *stack;
 	node->data = data;
 	*stack = node;
 }
 
-void stack_pop(STACK** stack, int32* data){
+void stack_pop(stack_t **stack, int4 *data)
+{
 	if (*stack == NULL)
 		#ifdef __DEBUG__
 		THROW(true, "Stack overflow.")
 		#else
 		THROW(ERR_STACK_OVERFLOW);
 		#endif
-	STACK* node = *stack;
+	stack_t *node = *stack;
 	*stack = node->next;
 	*data = node->data;
 	free(node);
