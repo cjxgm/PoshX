@@ -1,0 +1,4 @@
+#!/bin/bash
+if make; then
+	./poshx sameout.pox
+fi
