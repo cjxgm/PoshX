@@ -110,6 +110,9 @@ ____________
 _________
  History 
 ~~~~~~~~~
+  20110201  X 0 (10.0):		@ Rewrote all the codes for clearability.
+  							+ Colorful output
+
   20110101  X 0 (10.0):		Re-designed of Posh language.
   							All codes rewrote under Linux.
 							Finished the first README document.

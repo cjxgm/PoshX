@@ -1,35 +1,42 @@
+/** error.h
+ * The error proccessing function and basic IO.
+ **
+ * This file is part of PoshX project.
+ * Under GPLv3. See COPYING for more details.
+ * Obey the KING Principle.
+ * NO WARRANTY!
+ **
+ * AUTHORS:
+ *		eXerigumo Clanjor
+ * COPYLEFT(C):
+ *		Clan Open Studio, 2010-2011.
+ */
+
 #ifndef __ERROR_H__
 #define __ERROR_H__
 
-static int error = 0;
+#include "type.h"
 
-#define ERROR(e) error = e
+extern string error_msgs[];
 
-#define COLOR_RED_BOLD printf("\033[01;31m");
-#define COLOR_GREEN_BOLD printf("\033[01;32m");
-#define COLOR_BLUE_BOLD printf("\033[01;34m");
-#define COLOR_RESET printf("\033[0m");
-
+void throw(byte errno);
+void warn(byte errno);
+void print(string str);
 #ifdef __DEBUG__
-	#include <stdio.h>
-	#define THROW(iserr,e){\
-		if (iserr) { COLOR_RED_BOLD; printf("Error: "); }\
-		COLOR_RESET;\
-		printf("%s\n", e);\
-		COLOR_RESET;\
-		if (iserr) { error=-1; return; };\
-	}
+void debug(string fmt, ...);
 #else
-	#define THROW(e) { ERROR(e); return; }
+#define debug(fmt, ...)
 #endif
 
-#define ERR_FILETYPE_MISMATCH			1
-#define ERR_VERSION_MISMATCH			2
-#define ERR_UNKNOWN_SECTION				3
-#define ERR_UNEXPECTED_HALTED			4
-#define ERR_UNKNOWN_CODE				5
-#define ERR_STACK_OVERFLOW				6
-
-#define ERR_HALT						255
+#define ERR_OK						0
+#define ERR_FILEOP_FAILED			1
+#define ERR_MEMOP_FAILED			2
+#define ERR_OUT_OF_STACK			3
+#define ERR_FILETYPE_MISMATCH		4
+#define ERR_FILEVER_MISMATCH		5
+#define ERR_UNKNOWN_SEC				6
+#define ERR_UNEXPECTED_HALT			7
+#define ERR_UNKNOWN_OPCODE			8
 
 #endif
+
