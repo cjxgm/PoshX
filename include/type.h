@@ -32,7 +32,6 @@ typedef struct _stack stack_t;
 typedef int4 pox_data_t;
 
 /****** poxc ******/
-typedef struct _tree tree_t;
 #define MAX_NAME_LEN 31
 
 /****** pox ******/
