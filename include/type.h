@@ -25,12 +25,17 @@ typedef byte bool;
 #define true	1
 #define false	0
 
+/****** pox ******/
 typedef struct _pox_code pox_code_t;
 typedef struct _pox pox_t;
 typedef struct _stack stack_t;
 typedef int4 pox_data_t;
 
-// pox
+/****** poxc ******/
+typedef struct _tree tree_t;
+#define MAX_NAME_LEN 31
+
+/****** pox ******/
 struct _pox_code
 {
 	byte code;		// Operating code

@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 {
 	bool compile_mode = false; // true => compile; false => run
 	const char *input_file = NULL;
+	const char *output_file = "a.pox";
 
 #define SHIFT { argc--; argv++; }
 	while(argc>1){
@@ -29,6 +30,14 @@ int main(int argc, char *argv[])
 			// Compile
 			if (strcmp(argv[1], "-c") == 0){
 				compile_mode = true;
+				SHIFT;
+			}
+
+			// Output_file
+			else if (strcmp(argv[1], "-o") == 0){
+				compile_mode = true; // It must be compile mode
+				SHIFT;
+				output_file = argv[1];
 				SHIFT;
 			}
 
@@ -53,7 +62,10 @@ int main(int argc, char *argv[])
 
 	// Compile
 	if (compile_mode){
-		// TODO
+		debug("[COMPILE]");
+		debug("\tinput file: %s", input_file);
+		debug("\toutput file: %s", output_file);
+		poxc_compile_file(input_file, output_file);
 	}
 
 	// Run

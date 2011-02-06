@@ -42,6 +42,24 @@ string error_msgs[] = {
 /* 08 */
 	"Unknown operating code!\n"
 	"\tYou write the file yourself???",
+/* 09 */
+	"Identifier is too long!",
+/* 10 */
+	"Unknown character!",
+/* 11 */
+	"Symbol table overflow!\n"
+	"\tUsually, it's because you use too many variables/values.",
+/* 12 */
+	"Unexpected end of file!",
+/* 13 */
+	"Unexpected value/variable!",
+/* 14 */
+	"Redefinition of label!",
+/* 15 */
+	"Code table overflow!\n"
+	"\tUsually, it's because you use too many instructions.",
+/* 16 */
+	"Label undefined!!",
 };
 
 void throw(byte errno)
@@ -55,17 +73,8 @@ void throw(byte errno)
 	exit(errno);
 }
 
-void warn(byte errno)
-{
-	assert(errno != ERR_OK);
-
-	// CAUTION: It may go wrong if you pass it a wrong errno!
-	// \033[00;33m		Yello Color
-	// \033[0m			Normal Color(Normally it's white)
-	printf("\033[00;33mWARNING:\033[0m %s\n", error_msgs[errno]);
-}
-
 #ifdef __DEBUG__
+
 void debug(string fmt, ...)
 {
 	if (fmt == NULL || fmt[0] == 0){
@@ -84,5 +93,16 @@ void debug(string fmt, ...)
 
 	printf("\n");
 }
+
+void warn(byte errno)
+{
+	assert(errno != ERR_OK);
+
+	// CAUTION: It may go wrong if you pass it a wrong errno!
+	// \033[00;33m		Yello Color
+	// \033[0m			Normal Color(Normally it's white)
+	printf("\033[00;33mWARNING:\033[0m %s\n", error_msgs[errno]);
+}
+
 #endif
 

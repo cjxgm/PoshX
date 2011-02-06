@@ -1,0 +1,31 @@
+#!/usr/bin/poshx -o demo.pox
+# SAMEOUT
+
+in
+pop a
+
+:loop.1
+	in
+	pop b
+	push b
+	push a
+	eq
+	jz :loop.1
+
+push 0
+pop b
+:loop.2
+	push b
+	push a
+	lt
+	jz :loop.2.end
+	push b
+	push 1
+	add
+	out
+	inc b
+	jmp :loop.2
+
+:loop.2.end
+halt
+

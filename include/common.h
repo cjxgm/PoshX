@@ -16,6 +16,9 @@
 #define __COMMON_H__
 
 #define POX_VERSION			0x00
+#ifndef POX_MAGIC_LINE
+#define POX_MAGIC_LINE		"/usr/bin/poshx"
+#endif
 
 #define NOP		0x00
 

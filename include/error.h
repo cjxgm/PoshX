@@ -20,12 +20,13 @@
 extern string error_msgs[];
 
 void throw(byte errno);
-void warn(byte errno);
 void print(string str);
 #ifdef __DEBUG__
 void debug(string fmt, ...);
+void warn(byte errno);
 #else
-#define debug(fmt, ...)
+#define debug(...) {}
+#define warn(...) {}
 #endif
 
 #define ERR_OK						0
@@ -37,6 +38,14 @@ void debug(string fmt, ...);
 #define ERR_UNKNOWN_SEC				6
 #define ERR_UNEXPECTED_HALT			7
 #define ERR_UNKNOWN_OPCODE			8
+#define ERR_ID_TOO_LONG				9
+#define ERR_UNKNOWN_CH				10
+#define ERR_SYMTAB_OVERFLOW			11
+#define ERR_UNEXPECTED_EOF			12
+#define ERR_UNEXPECTED_V			13
+#define ERR_REDEFINE_LABEL			14
+#define ERR_CODETAB_OVERFLOW		15
+#define ERR_LABEL_UNDEFINED			16
 
 #endif
 
