@@ -28,7 +28,7 @@ static struct _label
 } symtab_label[0xFFFF];
 static int label_pos = 0;
 
-int symtab_append_var(const char * text)
+int symtab_append_var(STRING text)
 {
 	// Check if there is the same
 	int i;
@@ -46,7 +46,7 @@ int symtab_append_var(const char * text)
 	return var_pos++;
 }
 
-int symtab_append_value(const char * text)
+int symtab_append_value(STRING text)
 {
 	// Check if there is the same
 	int i;
@@ -64,7 +64,7 @@ int symtab_append_value(const char * text)
 	return value_pos++;
 }
 
-u16 symtab_append_label(const char * text)
+u16 symtab_append_label(STRING text)
 {
 	// Check if there is the same
 	int i;

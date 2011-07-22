@@ -17,8 +17,8 @@ void show_help();
 int main(int argc, char * argv[])
 {
 	bool compile_mode = false; // true => compile; false => run
-	const char * input_file = NULL;
-	const char * output_file = "a.pox";
+	STRING input_file = NULL;
+	STRING output_file = "a.pox";
 
 #define SHIFT { argc--; argv++; }
 	while(argc>1){
@@ -74,7 +74,7 @@ int main(int argc, char * argv[])
 	return 0;
 }
 
-void show_help(const char * name)
+void show_help(STRING name)
 {
 #define NORMAL "\033[0m"
 #define RED_BOLD "\033[01;31m"

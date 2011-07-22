@@ -20,7 +20,7 @@
 #include "symtab.h"
 #include "common.h"
 
-void poxc_compile_file(const char * filein, const char * fileout)
+void poxc_compile_file(STRING filein, STRING fileout)
 {
 	// TODO Optimize this so that when unexpectedly exit...
 	//		You know it.
@@ -39,8 +39,8 @@ void poxc_compile_file(const char * filein, const char * fileout)
 	fclose(fpout);
 }
 
-static int TKype = TYPE_UNKNOWN;
-static char *TKext = NULL;
+static int tk_type = TYPE_UNKNOWN;
+static char *tk_text = NULL;
 static int tk_value = -1;
 static bool lex_finished = false;
 static u16 current_code = 0;
@@ -48,7 +48,7 @@ static struct _code
 {
 	byte code;
 	u16 addr;
-	int ADDRype;
+	int addr_type;
 } codes[0xFFFF];
 
 void poxc_compile(FILE * fpin, FILE * fpout)
@@ -69,31 +69,31 @@ inline void poxc_parse(FILE * fp)
 		if (lex_finished) break;
 
 #ifdef __DEBUG__
-		if (TKype == TYPE_KEY)
-			debug("LEX[%d]\t%s", TKype, TKext);
-		else if (TKype == TYPE_LABEL)
-			debug("LEX[%d]\t(LABEL)*%d", TKype, tk_value);
-		else if (TKype == TYPE_VALUE)
-			debug("LEX[%d]\t(VALUE)*%d", TKype, tk_value);
+		if (tk_type == TYPE_KEY)
+			debug("LEX[%d]\t%s", tk_type, tk_text);
+		else if (tk_type == TYPE_LABEL)
+			debug("LEX[%d]\t(LABEL)*%d", tk_type, tk_value);
+		else if (tk_type == TYPE_VALUE)
+			debug("LEX[%d]\t(VALUE)*%d", tk_type, tk_value);
 		else
-			debug("LEX[%d]\t(VAR)*%d", TKype, tk_value);
+			debug("LEX[%d]\t(VAR)*%d", tk_type, tk_value);
 #endif
 
 		// Instruction
-		if (TKype == TYPE_KEY){
-			// Save old string
-			char * tt = TKext;
+		if (tk_type == TYPE_KEY){
+			// Save old STRING
+			char * tt = tk_text;
 
 			// Get parameter
 			poxc_lex(fp);
 
 			emit_code(tt);
 			free(tt);
-			if (TKype != TYPE_KEY) poxc_lex(fp);
+			if (tk_type != TYPE_KEY) poxc_lex(fp);
 		}
 
 		// Label definition
-		else if (TKype == TYPE_LABEL){
+		else if (tk_type == TYPE_LABEL){
 			symtab_set_label(tk_value, current_code);
 			poxc_lex(fp);
 		}
@@ -106,12 +106,12 @@ inline void poxc_parse(FILE * fp)
 void poxc_lex(FILE * fp)
 {
 	// Clean up first
-	TKype = TYPE_UNKNOWN;
+	tk_type = TYPE_UNKNOWN;
 	tk_value = -1;
 
-	int pos = 0; // Cursor of current char in TKext
-	TKext = malloc(MAX_NAME_LEN);
-	if (TKext == NULL) throw(ERR_MEMOP_FAILED);
+	int pos = 0; // Cursor of current char in tk_text
+	tk_text = malloc(MAX_NAME_LEN);
+	if (tk_text == NULL) throw(ERR_MEMOP_FAILED);
 
 	char ch;
 	while (!feof(fp)){
@@ -137,47 +137,47 @@ void poxc_lex(FILE * fp)
 
 	// Identifier or label
 	if (ch == ':' || ch == '.' || ch == '_' || isalpha(ch)){
-		TKype = TYPE_IDENT;
-		TKext[pos++] = ch;
+		tk_type = TYPE_IDENT;
+		tk_text[pos++] = ch;
 		while (isalnum(ch = getc(fp)) || ch == '.' || ch == '_'){
 			if (feof(fp)) break;
 			if (pos == MAX_NAME_LEN) throw(ERR_ID_TOO_LONG);
-			TKext[pos++] = ch;
+			tk_text[pos++] = ch;
 		}
-		TKext[pos] = 0; // A string ends with 0
+		tk_text[pos] = 0; // A STRING ends with 0
 
 		// Is label?
-		if (TKext[0] == ':'){
-			TKype = TYPE_LABEL;
-			tk_value = symtab_append_label(TKext);
-			free(TKext);
-			TKext = NULL;
+		if (tk_text[0] == ':'){
+			tk_type = TYPE_LABEL;
+			tk_value = symtab_append_label(tk_text);
+			free(tk_text);
+			tk_text = NULL;
 		}
 
 		// Is keyword?
-		else if (is_key(TKext)) TKype = TYPE_KEY;
+		else if (is_key(tk_text)) tk_type = TYPE_KEY;
 
 		// Oh, that's a variable
 		else {
-			tk_value = symtab_append_var(TKext);
-			free(TKext);
-			TKext = NULL;
+			tk_value = symtab_append_var(tk_text);
+			free(tk_text);
+			tk_text = NULL;
 		}
 	}
 
 	// Value
 	else if (isdigit(ch)){
-		TKype = TYPE_VALUE;
-		TKext[pos++] = ch;
+		tk_type = TYPE_VALUE;
+		tk_text[pos++] = ch;
 		while (isdigit(ch = getc(fp))){
 			if (feof(fp)) break;
 			if (pos == MAX_NAME_LEN) throw(ERR_ID_TOO_LONG);
-			TKext[pos++] = ch;
+			tk_text[pos++] = ch;
 		}
-		TKext[pos] = 0;
-		tk_value = symtab_append_value(TKext);
-		free(TKext);
-		TKext = NULL;
+		tk_text[pos] = 0;
+		tk_value = symtab_append_value(tk_text);
+		free(tk_text);
+		tk_text = NULL;
 	}
 
 	// Unknown
@@ -187,36 +187,36 @@ void poxc_lex(FILE * fp)
 	}
 }
 
-static const char * keywords[] = {
+static STRING keywords[] = {
 	"nop", "push", "pop", "popa", "jmp", "jz", "call", "cz", "ret",
 	"inc", "dec", "add", "sub", "mul", "div", "mod", "gt", "lt", "eq",
 	"and", "or", "not", "in", "out", "halt", NULL
 };
 
-inline bool is_key(const char* IDo_check)
+inline bool is_key(STRING id_to_check)
 {
 	int i;
 	for(i=0; keywords[i]!=NULL; i++)
-		if (strcmp(IDo_check, keywords[i]) == 0)
+		if (strcmp(id_to_check, keywords[i]) == 0)
 			return true;
 	return false;
 }
 
-void emit_code(const char * key)
+void emit_code(STRING key)
 {
 	debug("[EMIT] %s(*%d:%d);", key, tk_value, 
-			(TKype==TYPE_KEY ? TYPE_UNKNOWN : TKype));
+			(tk_type==TYPE_KEY ? TYPE_UNKNOWN : tk_type));
 
 	// Overflow?
 	if (current_code == 0xFFFF) throw(ERR_CODETAB_OVERFLOW);
 
 	// Save data
-	if (TKype == TYPE_KEY){
-		codes[current_code].ADDRype = TYPE_UNKNOWN;
+	if (tk_type == TYPE_KEY){
+		codes[current_code].addr_type = TYPE_UNKNOWN;
 		codes[current_code].addr = -1;
 	}
 	else {
-		codes[current_code].ADDRype = TKype;
+		codes[current_code].addr_type = tk_type;
 		codes[current_code].addr = tk_value;
 	}
 
@@ -300,11 +300,11 @@ void poxc_write(FILE * fp)
 	for (i=0; i<current_code; i++){
 		fwrite(&codes[i].code, 1, 1, fp);
 		u16 addr = codes[i].addr + 0x10; // First 0x10 for registers
-		if (codes[i].ADDRype == TYPE_VALUE)
+		if (codes[i].addr_type == TYPE_VALUE)
 			addr += var_len;
-		else if (codes[i].ADDRype == TYPE_UNKNOWN)
+		else if (codes[i].addr_type == TYPE_UNKNOWN)
 			addr = 0;
-		else if (codes[i].ADDRype == TYPE_LABEL)
+		else if (codes[i].addr_type == TYPE_LABEL)
 			addr = symtab_get_label(addr-0x10);
 		fwrite(&addr, sizeof(u16), 1, fp);
 	}

@@ -14,12 +14,12 @@
 
 #include "type.h"
 
-extern string error_msgs[];
+extern STRING error_msgs[];
 
 void throw(byte errno);
-void print(string str);
+void print(STRING str);
 #ifdef __DEBUG__
-void debug(string fmt, ...);
+void debug(STRING fmt, ...);
 void warn(byte errno);
 #else
 #define debug(...) {}

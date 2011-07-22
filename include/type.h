@@ -16,7 +16,7 @@ typedef short s16;
 typedef unsigned short u16;
 typedef int s32;
 typedef unsigned int u32;
-typedef const char* string;
+typedef const char * STRING;
 typedef unsigned char byte;
 typedef byte bool;
 #define true	1

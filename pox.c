@@ -19,7 +19,7 @@
 #include "stack.h"
 #include "common.h"
 
-POX * pox_load_file(const char * filename)
+POX * pox_load_file(STRING filename)
 {
 	// Open file
 	FILE* fp = fopen(filename, "rb");

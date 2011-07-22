@@ -16,7 +16,7 @@
 #include "stdio.h"
 
 POX * pox_load(FILE* fp);
-POX * pox_load_file(const char * filename);
+POX * pox_load_file(STRING filename);
 void pox_free(POX * pox);
 
 void pox_run(POX * pox);

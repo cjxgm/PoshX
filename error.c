@@ -15,7 +15,7 @@
 #include <assert.h>
 #include "error.h"
 
-string error_msgs[] = {
+STRING error_msgs[] = {
 	"",
 /* 01 */
 	"File operation failed!\n"
@@ -72,7 +72,7 @@ void throw(byte errno)
 
 #ifdef __DEBUG__
 
-void debug(string fmt, ...)
+void debug(STRING fmt, ...)
 {
 	if (fmt == NULL || fmt[0] == 0){
 		printf("\n");
