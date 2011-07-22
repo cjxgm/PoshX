@@ -32,21 +32,21 @@ _____________________
 ~~~~~~~~~~~~~~~~~~~~~
   OK, let's have a look at it first. Don't worry,  I'll explain
 them later.
-    		call main	# gosub main
+    		call :main	# gosub main
 			halt		# end
-	main:				# main:
+	label :main			# main:
 			push 1
 			pop i		# i = 1
-		for:			# for:
+		label :for		# for:
 			push i
 			push 10
 			lt
-			jz for.end	# if not i<10 then goto for_end
+			jz :for.end	# if not i<10 then goto for_end
 			push i
 			out			# print i
 			inc i		# i = i + 1
-			jmp for		# goto for
-		for.end:		# for_end:
+			jmp :for	# goto for
+		label :for.end	# for_end:
 	ret					# return
   The first thing I want to say is, that anything from "#" to
 the line-end is a comment. That means, the compiler will ignore
@@ -60,14 +60,14 @@ what I just said, what I'm saying now and what I will say. So, if
 you really don't know these things, Google them and learn a little
 bit about these, then go back to see this document.
   OK, let's see the code in detail:
-    		call main	# gosub main
+    		call :main	# gosub main
 			halt		# end
   These instructions will call the function "main" which will be
 declared below. In fact, "main" is just a label like any other
 assembly language. "halt" let the VM stop normally, or it may occure
 error(s). Each instruction is combined by an op(eration) and one
 or no value. Go on:
-	main:				# main:
+	label :main			# main:
 			push 1
 			pop i		# i = 1
   Yeah, the stack operations. As I mentioned above, it declares a
@@ -76,11 +76,11 @@ to the variable i. There is something I must tell you is, that
 Posh has only 1 data type, that is singned 32-bit integer.
   These 2 instructions (label declaration is not an instruction!)
 assigns i to 1 to prepare for the for-loop.
-		for:			# for:
+		label :for		# for:
 			push i
 			push 10
 			lt
-			jz for.end	# if not i<10 then goto for_end
+			jz :for.end	# if not i<10 then goto for_end
   "lt" is the short form of "less than". It will pop 2 values and
 compare them if the last-second pushed value is less than the last
 pushed one. Every op which needs 2 values is used like this. Care
@@ -91,8 +91,8 @@ about the order by which the op will use the value!
 			inc i		# i = i + 1
   In C/C++, this is written like "i++". Yeah, inc = increase, and
 dec = decrease which you may use in the future.
-			jmp for		# goto for
-		for.end:		# for_end:
+			jmp :for	# goto for
+		label :for.end	# for_end:
   The for-loop is totally ended.
 	ret					# return
   Just like "return" in any other programming language.
@@ -110,6 +110,21 @@ ____________
 _________
  History 
 ~~~~~~~~~
+  20110722  X 1 (10.1)		@ Fixed a bug:
+  								'halt :label' will tell you label undefined
+								Added a new keyword: label to solve this.
+							@ Fixed mismatching of this document and 'demo.pxs'
+							@ Adjusted the coding style, such as (in vim):
+								%s/\*\([a-z]\)/* \1/g
+								%s/\([a-z]\)\*/\1 */g
+								%s/\(\<.*\>\)_\<t\>/\U\1\E/g
+								%s/\<int2\>/s16/g
+								%s/\<uint2\>/u16/g
+								%s/\<int4\>/s32/g
+								%s/\<uint4\>/u32/g
+								%s/const char */STRING/g
+								...
+
   20110201  X 0 (10.0):		@ Rewrote all the codes for clearability.
   							+ Colorful output
 
