@@ -16,19 +16,19 @@
 #include "stack.h"
 #include "error.h"
 
-stack_t *stack_new(int4 size)
+STACK * stack_new(s32 size)
 {
-	stack_t *stack = malloc(sizeof(stack_t));
+	STACK * stack = malloc(sizeof(STACK));
 	if (stack == NULL) throw(ERR_MEMOP_FAILED);
 
 	stack->sp = 0;
 	stack->size = size;
-	stack->data = malloc(sizeof(pox_data_t)*size);
+	stack->data = malloc(sizeof(POX_DATA)* size);
 
 	return stack;
 }
 
-void stack_free(stack_t *stack)
+void stack_free(STACK * stack)
 {
 	free(stack->data);
 	// I think it's better to clear them up.
@@ -37,7 +37,7 @@ void stack_free(stack_t *stack)
 	stack->sp = 0;
 }
 
-void stack_push(stack_t *stack, const pox_data_t data)
+void stack_push(STACK * stack, const POX_DATA data)
 {
 	if (stack->sp == stack->size)
 		throw(ERR_OUT_OF_STACK);
@@ -45,7 +45,7 @@ void stack_push(stack_t *stack, const pox_data_t data)
 	stack->data[stack->sp++] = data;
 }
 
-pox_data_t stack_pop(stack_t *stack)
+POX_DATA stack_pop(STACK * stack)
 {
 	if (stack->sp == 0)
 		throw(ERR_OUT_OF_STACK);
@@ -53,9 +53,9 @@ pox_data_t stack_pop(stack_t *stack)
 	return stack->data[--stack->sp];
 }
 
-pox_data_t stack_pop_all(stack_t *stack)
+POX_DATA stack_pop_all(STACK * stack)
 {
-	pox_data_t temp = 0;
+	POX_DATA temp = 0;
 	while(stack->sp) temp = stack_pop(stack);
 	return temp;
 }

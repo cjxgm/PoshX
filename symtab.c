@@ -28,7 +28,7 @@ static struct _label
 } symtab_label[0xFFFF];
 static int label_pos = 0;
 
-int symtab_append_var(const char *text)
+int symtab_append_var(const char * text)
 {
 	// Check if there is the same
 	int i;
@@ -46,7 +46,7 @@ int symtab_append_var(const char *text)
 	return var_pos++;
 }
 
-int symtab_append_value(const char *text)
+int symtab_append_value(const char * text)
 {
 	// Check if there is the same
 	int i;
@@ -64,7 +64,7 @@ int symtab_append_value(const char *text)
 	return value_pos++;
 }
 
-uint2 symtab_append_label(const char *text)
+u16 symtab_append_label(const char * text)
 {
 	// Check if there is the same
 	int i;
@@ -83,7 +83,7 @@ uint2 symtab_append_label(const char *text)
 	return label_pos++;
 }
 
-void symtab_set_label(uint2 labelid, uint2 addr)
+void symtab_set_label(u16 labelid, u16 addr)
 {
 	// if (labelid >= label_pos) throw(???);
 	if (symtab_label[labelid].addr != -1){
@@ -94,22 +94,22 @@ void symtab_set_label(uint2 labelid, uint2 addr)
 	symtab_label[labelid].addr = addr;
 }
 
-inline uint2 symtab_get_var_len()
+inline u16 symtab_get_var_len()
 {
 	return var_pos;
 }
 
-inline uint2 symtab_get_value_len()
+inline u16 symtab_get_value_len()
 {
 	return value_pos;
 }
 
-int4 symtab_get_value(uint2 valueid)
+s32 symtab_get_value(u16 valueid)
 {
 	return atoi(symtab_value[valueid]);
 }
 
-uint2 symtab_get_label(uint2 labelid)
+u16 symtab_get_label(u16 labelid)
 {
 	if (symtab_label[labelid].addr == -1){
 		debug("[%s:%d]", symtab_label[labelid].name, labelid);

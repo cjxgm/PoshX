@@ -19,7 +19,7 @@
 #include "stack.h"
 #include "common.h"
 
-pox_t *pox_load_file(const char *filename)
+POX * pox_load_file(const char * filename)
 {
 	// Open file
 	FILE* fp = fopen(filename, "rb");
@@ -30,13 +30,13 @@ pox_t *pox_load_file(const char *filename)
 	int ch;
 	while ((ch = getc(fp)) != EOF && ch != '\n');
 
-	pox_t *pox = pox_load(fp);
+	POX * pox = pox_load(fp);
 	fclose(fp);
 
 	return pox;
 }
 
-pox_t *pox_load(FILE* fp)
+POX * pox_load(FILE* fp)
 {
 	int i;
 
@@ -60,7 +60,7 @@ pox_t *pox_load(FILE* fp)
 		throw(ERR_FILEVER_MISMATCH);
 
 	// Init
-	pox_t *pox = malloc(sizeof(pox_t));
+	POX * pox = malloc(sizeof(POX));
 	pox->cs = NULL;
 	pox->ds = NULL;
 	pox->lencs = pox->lends = pox->ip = 0;
@@ -94,8 +94,8 @@ pox_t *pox_load(FILE* fp)
 		sec_name[i] = 0;
 
 		// Body length
-		uint4 body_len;
-		fread(&body_len, sizeof(uint4), 1, fp);
+		u32 body_len;
+		fread(&body_len, sizeof(u32), 1, fp);
 
 		debug("[%s: %d]", sec_name, body_len);
 
@@ -111,13 +111,13 @@ pox_t *pox_load(FILE* fp)
 			 * ...:	(C+D) wiil be as many as A shows.
 			 */
 			// Amount
-			fread(&pox->lencs, sizeof(uint2), 1, fp);
+			fread(&pox->lencs, sizeof(u16), 1, fp);
 
 			// Read CS
-			pox->cs = malloc(sizeof(pox_code_t) * pox->lencs);
+			pox->cs = malloc(sizeof(POX_CODE) * pox->lencs);
 			for (i=0; i<pox->lencs; i++){
 				fread(&pox->cs[i].code, sizeof(byte), 1, fp);
-				fread(&pox->cs[i].addr, sizeof(uint2), 1, fp);
+				fread(&pox->cs[i].addr, sizeof(u16), 1, fp);
 			}
 
 #ifdef __DEBUG__
@@ -140,19 +140,19 @@ pox_t *pox_load(FILE* fp)
 			 * ...:	V wiil be as many as A2 shows.
 			 */
 			// Read amounts
-			uint2 len;
-			fread(&len, sizeof(uint2), 1, fp);
+			u16 len;
+			fread(&len, sizeof(u16), 1, fp);
 			len += 0x10; // 0x00~0x10(not included)
 			// are reserved for registers.
-			fread(&pox->lends, sizeof(uint2), 1, fp);
+			fread(&pox->lends, sizeof(u16), 1, fp);
 			pox->lends += len;
 
 			// Read ds
-			pox->ds = malloc(sizeof(pox_data_t) * pox->lends);
+			pox->ds = malloc(sizeof(POX_DATA) * pox->lends);
 			// 0x10~len(not included) are used for variables
 			// len~lends(not included) are used for datas
 			for (i=len; i<pox->lends; i++)
-				fread(&pox->ds[i], sizeof(pox_data_t), 1, fp);
+				fread(&pox->ds[i], sizeof(POX_DATA), 1, fp);
 
 #ifdef __DEBUG__
 			for (i=0; i<pox->lends; i++)
@@ -171,7 +171,7 @@ pox_t *pox_load(FILE* fp)
 	return pox;
 }
 
-void pox_free(pox_t *pox)
+void pox_free(POX * pox)
 {
 	free(pox->cs);
 	free(pox->ds);
@@ -185,7 +185,7 @@ void pox_free(pox_t *pox)
 	pox->lencs = pox->lends = pox->ip = 0;
 }
 
-void pox_run(pox_t *pox)
+void pox_run(POX * pox)
 {
 	debug("{POX_RUN BEGINS}");
 
@@ -200,13 +200,13 @@ void pox_run(pox_t *pox)
 
 // @return	true  -> halt
 //			false -> continue
-bool pox_run_once(pox_t *pox)
+bool pox_run_once(POX * pox)
 {
 #define CODE (pox->cs[pox->ip].code)
 #define ADDR (pox->cs[pox->ip].addr)
 #define DATA (pox->ds[ADDR])
 
-	pox_data_t tempi, tempj;
+	POX_DATA tempi, tempj;
 
 	switch(CODE){
 	case NOP:
@@ -223,25 +223,25 @@ bool pox_run_once(pox_t *pox)
 		break;
 
 	case JMP:
-		pox->ip = (int4)ADDR - 1;
+		pox->ip = (s32)ADDR - 1;
 		break;
 	case JZ:
 		tempi = stack_pop(pox->user_stack);
-		if (tempi == 0) pox->ip = (int4)ADDR - 1;
+		if (tempi == 0) pox->ip = (s32)ADDR - 1;
 		break;
 	case CALL:
-		stack_push(pox->call_stack, (pox_data_t)pox->ip);
-		pox->ip = (int4)ADDR - 1;
+		stack_push(pox->call_stack, (POX_DATA)pox->ip);
+		pox->ip = (s32)ADDR - 1;
 		break;
 	case CZ:
 		tempi = stack_pop(pox->user_stack);
 		if (tempi == 0){
-			stack_push(pox->call_stack, (pox_data_t)pox->ip);
-			pox->ip = (int4)ADDR - 1;
+			stack_push(pox->call_stack, (POX_DATA)pox->ip);
+			pox->ip = (s32)ADDR - 1;
 		}
 		break;
 	case RET:
-		pox->ip = (int4)stack_pop(pox->call_stack);
+		pox->ip = (s32)stack_pop(pox->call_stack);
 		break;
 
 	case INC:

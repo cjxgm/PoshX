@@ -1,24 +1,21 @@
 /** type.h
  * 
  **
- * This file is part of PoshX project.
+ * This file is a part of PoshX project.
  * Under GPLv3. See COPYING for more details.
- * Obey the KING Principle.
  * NO WARRANTY!
  **
  * AUTHORS:
  *		eXerigumo Clanjor
- * COPYLEFT(C):
- *		Clan Open Studio, 2010-2011.
  */
 
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-typedef short int2;
-typedef unsigned short uint2;
-typedef int int4;
-typedef unsigned int uint4;
+typedef short s16;
+typedef unsigned short u16;
+typedef int s32;
+typedef unsigned int u32;
 typedef const char* string;
 typedef unsigned char byte;
 typedef byte bool;
@@ -26,10 +23,10 @@ typedef byte bool;
 #define false	0
 
 /****** pox ******/
-typedef struct _pox_code pox_code_t;
-typedef struct _pox pox_t;
-typedef struct _stack stack_t;
-typedef int4 pox_data_t;
+typedef struct _pox_code POX_CODE;
+typedef struct _pox POX;
+typedef struct _stack STACK;
+typedef s32 POX_DATA;
 
 /****** poxc ******/
 #define MAX_NAME_LEN 31
@@ -38,31 +35,31 @@ typedef int4 pox_data_t;
 struct _pox_code
 {
 	byte code;		// Operating code
-	uint2 addr;		// Address
+	u16 addr;		// Address
 };
 
 struct _pox
 {
-	pox_code_t *cs;				// Code section
-	pox_data_t *ds;				// Data section
-	uint2 lencs;				// Length of cs
-	uint2 lends;				// Length of ds
-	stack_t *user_stack;		// User stack
-	stack_t *call_stack;		// call stack
-	/* Though it should be uint2, but, as the same
+	POX_CODE * cs;				// Code section
+	POX_DATA * ds;				// Data section
+	u16 lencs;				// Length of cs
+	u16 lends;				// Length of ds
+	STACK * user_stack;		// User stack
+	STACK * call_stack;		// call stack
+	/* Though it should be u16, but, as the same
 	   reason as why fgetc returns int rather than
-	   char, I set it int4.*/
-	int4 ip;					// Instruction Pointer
+	   char, I set it s32.*/
+	s32 ip;					// Instruction Pointer
 };
 
 // stack
 struct _stack
 {
-	pox_data_t *data;
-	/* Though it should be uint2, but, as the same reason 
-	   as why fgetc returns int rather than char, I set it int4.*/
-	int4 size;		// Stack size
-	int4 sp;		// Stack pointer
+	POX_DATA * data;
+	/* Though it should be u16, but, as the same reason 
+	   as why fgetc returns int rather than char, I set it s32.*/
+	s32 size;		// Stack size
+	s32 sp;		// Stack pointer
 };
 
 #endif

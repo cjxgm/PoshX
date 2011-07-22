@@ -1,15 +1,12 @@
 /** main.c
  * 
  **
- * This file is part of PoshX project.
+ * This file is a part of PoshX project.
  * Under GPLv3. See COPYING for more details.
- * Obey the KING Principle.
  * NO WARRANTY!
  **
  * AUTHORS:
  *		eXerigumo Clanjor
- * COPYLEFT(C):
- *		Clan Open Studio, 2010-2011.
  */
 
 #include <string.h>
@@ -17,11 +14,11 @@
 
 void show_help();
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
 	bool compile_mode = false; // true => compile; false => run
-	const char *input_file = NULL;
-	const char *output_file = "a.pox";
+	const char * input_file = NULL;
+	const char * output_file = "a.pox";
 
 #define SHIFT { argc--; argv++; }
 	while(argc>1){
@@ -70,17 +67,16 @@ int main(int argc, char *argv[])
 
 	// Run
 	else {
-		pox_t *pox = pox_load_file(input_file); 
+		POX * pox = pox_load_file(input_file); 
 		pox_run(pox);
 		pox_free(pox);
 	}
 	return 0;
 }
 
-void show_help(const char *name)
+void show_help(const char * name)
 {
 #define NORMAL "\033[0m"
-#define RED "\033[00;31m"
 #define RED_BOLD "\033[01;31m"
 #define GREEN_BOLD "\033[01;32m"
 #define YELLOW_BOLD "\033[01;33m"
@@ -88,7 +84,7 @@ void show_help(const char *name)
 
 	// Header
 	printf("%sPosh X 10.%d\n", PURPLE_BOLD, POX_VERSION);
-	printf("%sUnder GPLv3. %sNO WARRANTY!\n", NORMAL, RED);
+	printf("%sUnder GPLv3. %sNO WARRANTY!\n", NORMAL, RED_BOLD);
 	printf("\n");
 
 	// Syntax
@@ -96,7 +92,7 @@ void show_help(const char *name)
 	printf("%s[%s--help%s] ", NORMAL, RED_BOLD, NORMAL);
 	printf("[%s-h%s] ", RED_BOLD, NORMAL);
 	printf("[%s-c%s] ", RED_BOLD, NORMAL);
-	// Just for the blank area
+	printf("[%s-o %soutput_file%s] ", RED_BOLD, GREEN_BOLD, NORMAL);
 	printf("%sinput_file%s\n", GREEN_BOLD, NORMAL);
 
 	// --help, -h
@@ -107,11 +103,15 @@ void show_help(const char *name)
 	printf("\t%s-c\n", RED_BOLD);
 	printf("%s\t\tCompile the input_file rather than run it.\n", NORMAL);
 
+	// -o output_file
+	printf("\t%s-o %soutput_file\n", RED_BOLD, GREEN_BOLD);
+	printf("%s\t\tSpecify the output file. Automatically specify -c.\n", NORMAL);
+
 	// input_file
 	printf("\t%sinput_file\n", GREEN_BOLD);
 	printf("\t\t%sJust as its name.\n", NORMAL);
 	printf("\n");
-	printf("%sCopyleft (C) Clan Open Studio.\n", YELLOW_BOLD);
+	printf("%sCopyleft (C) Clanjor Productions, 2010-2011.\n", YELLOW_BOLD);
 	printf(NORMAL);
 }
 
