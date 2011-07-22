@@ -5,7 +5,7 @@
 in
 pop a
 
-:loop.1
+label :loop.1
 	in
 	pop b
 	push b
@@ -15,7 +15,7 @@ pop a
 
 push 0
 pop b
-:loop.2
+label :loop.2
 	push b
 	push a
 	lt
@@ -27,6 +27,6 @@ pop b
 	inc b
 	jmp :loop.2
 
-:loop.2.end
+label :loop.2.end
 halt
 

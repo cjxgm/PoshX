@@ -1,5 +1,5 @@
 CC = gcc
-DEBUG = -Ofast -s#-g -D__DEBUG__ -DPOX_MAGIC_LINE="\"./poshx\""
+DEBUG = -Ofast -s #-g -D__DEBUG__ -DPOX_MAGIC_LINE="\"./poshx\""
 CFLAGS = -Wall -I./include $(DEBUG)
 OBJECTS = main.o pox.o poxc.o error.o stack.o symtab.o
 

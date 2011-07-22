@@ -87,15 +87,20 @@ inline void poxc_parse(FILE * fp)
 			// Get parameter
 			poxc_lex(fp);
 
-			emit_code(tt);
+			if (strcmp(tt, "label") == 0) {
+				// Label definition...
+				if (tk_type == TYPE_LABEL){
+					symtab_set_label(tk_value, current_code);
+					poxc_lex(fp);
+				}
+				else throw(ERR_UNEXPECTED_V);
+			}
+			else {
+				// ...or normal code
+				emit_code(tt);
+				if (tk_type != TYPE_KEY) poxc_lex(fp);
+			}
 			free(tt);
-			if (tk_type != TYPE_KEY) poxc_lex(fp);
-		}
-
-		// Label definition
-		else if (tk_type == TYPE_LABEL){
-			symtab_set_label(tk_value, current_code);
-			poxc_lex(fp);
 		}
 
 		// Unknow?
@@ -190,7 +195,7 @@ void poxc_lex(FILE * fp)
 static STRING keywords[] = {
 	"nop", "push", "pop", "popa", "jmp", "jz", "call", "cz", "ret",
 	"inc", "dec", "add", "sub", "mul", "div", "mod", "gt", "lt", "eq",
-	"and", "or", "not", "in", "out", "halt", NULL
+	"and", "or", "not", "in", "out", "halt", "label", NULL
 };
 
 inline bool is_key(STRING id_to_check)
