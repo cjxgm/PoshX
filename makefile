@@ -1,5 +1,5 @@
 CC = gcc
-DEBUG = #-g -D__DEBUG__ -DPOX_MAGIC_LINE="\"./poshx\""
+DEBUG = -Ofast -s#-g -D__DEBUG__ -DPOX_MAGIC_LINE="\"./poshx\""
 CFLAGS = -Wall -I./include $(DEBUG)
 OBJECTS = main.o pox.o poxc.o error.o stack.o symtab.o
 
@@ -13,14 +13,21 @@ STACK_H = $(H_PREFIX)/stack.h
 COMMON_H = $(H_PREFIX)/common.h
 SYMTAB_H = $(H_PREFIX)/symtab.h
 
-.PHONY: all clean cleanall all-clean
+.PHONY: all clean rebuild debug
 
 all: poshx
 clean:
-	rm *.o
-cleanall: clean
-	rm poshx
-all-clean: all clean
+	rm -f *.o
+	rm -f poshx
+	rm -f demo.pox
+rebuild: clean all
+debug: all
+	@echo Demo PoshX source code:
+	@cat demo.pxs
+	@echo Compiling...
+	@./poshx -o demo.pox demo.pxs
+	@echo Running...
+	@./poshx demo.pox
 
 poshx: $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS)
