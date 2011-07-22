@@ -1,5 +1,6 @@
 #!/usr/bin/poshx -o demo.pox
 # SAMEOUT
+# See README to understand this!
 
 in
 pop a
