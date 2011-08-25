@@ -277,6 +277,11 @@ bool pox_run_once(POX * pox)
 		}
 		stack_push(pox->user_stack, tempi);
 		break;
+	case NEG:
+		tempi = stack_pop(pox->user_stack);
+		tempi = -tempi;
+		stack_push(pox->user_stack, tempi);
+		break;
 
 	case GT:
 	case LT:

@@ -194,8 +194,8 @@ void poxc_lex(FILE * fp)
 
 static STRING keywords[] = {
 	"nop", "push", "pop", "popa", "jmp", "jz", "call", "cz", "ret",
-	"inc", "dec", "add", "sub", "mul", "div", "mod", "gt", "lt", "eq",
-	"and", "or", "not", "in", "out", "halt", "label", NULL
+	"inc", "dec", "add", "sub", "mul", "div", "mod", "neg", "gt", "lt",
+	"eq", "and", "or", "not", "in", "out", "halt", "label", NULL
 };
 
 inline bool is_key(STRING id_to_check)
@@ -258,6 +258,8 @@ void emit_code(STRING key)
 		codes[current_code].code = DIV;
 	else if (strcmp(key, "mod") == 0)
 		codes[current_code].code = MOD;
+	else if (strcmp(key, "neg") == 0)
+		codes[current_code].code = NEG;
 	else if (strcmp(key, "gt") == 0)
 		codes[current_code].code = GT;
 	else if (strcmp(key, "lt") == 0)

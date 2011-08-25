@@ -36,6 +36,7 @@
 #define MUL		0x24
 #define DIV		0x25
 #define MOD		0x26
+#define NEG		0x27
 
 #define GT		0x30
 #define LT		0x31
