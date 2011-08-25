@@ -3,10 +3,11 @@
 ___________
  IMPORTANT 
 ~~~~~~~~~~~
-  This project is under GPLv3.
-  !!! NO WARRANTY !!!
-  And we Clanjor Productions will follow the KING Principle
-(see "KING" for more details).
+  This project is under GPLv3 (see COPYING).
+  !!! ABSOLUTELY NO WARRANTY !!!
+
+  DO NOT BELIEVE FOLLOWING WORDS AS THERE WAS A BIG CHANGE IN POSHX
+  BUT NOT IN THIS DOCUMENT!
 
 ______________
  Introduction 
@@ -110,6 +111,9 @@ ____________
 _________
  History 
 ~~~~~~~~~
+  20110825  X 2 (10.2)		+ instruction NEG
+  							@ modified this document
+
   20110722  X 1 (10.1)		@ Fixed a bug:
   								'halt :label' will tell you label undefined
 								Added a new keyword: label to solve this.

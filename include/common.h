@@ -12,7 +12,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-#define POX_VERSION			0x01
+#define POX_VERSION			0x02
 #ifndef POX_MAGIC_LINE
 #define POX_MAGIC_LINE		"/usr/bin/poshx"
 #endif
