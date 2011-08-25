@@ -12,8 +12,6 @@ while [ "$1" != "" ]; do
  **
  * AUTHORS:
  *		eXerigumo Clanjor
- * COPYLEFT(C):
- *		Clan Open Studio, 2010-2011.
  */
 
 EOF
